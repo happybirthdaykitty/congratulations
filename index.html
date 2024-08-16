@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -309,7 +309,7 @@ Happy birthday Boss! May this be the start of the best chapters of your life.
     const mainContainer = document.getElementById('mainContainer');
 
     function calculateDays() {
-        const birthDate = new Date('2007-08-17'); // Replace with actual birth date
+        const birthDate = new Date('2007-08-17'); 
         const currentDate = new Date();
         const timeDifference = currentDate - birthDate;
         return Math.floor(timeDifference / (1000 * 60 * 60 * 24));
@@ -345,7 +345,7 @@ Happy birthday Boss! May this be the start of the best chapters of your life.
     }
 
     function createConfetti() {
-        for (let i = 0; i < 200; i++) { // Increased number of confetti pieces
+        for (let i = 0; i < 200; i++) { // confetti pieces
             let confetti = document.createElement('div');
             confetti.className = 'confetti';
             confetti.style.left = Math.random() * 100 + 'vw';
@@ -357,7 +357,7 @@ Happy birthday Boss! May this be the start of the best chapters of your life.
     }
 
     function createBalloons() {
-        for (let i = 0; i < 20; i++) { // Increased number of balloons
+        for (let i = 0; i < 20; i++) { // balloons
             let balloon = document.createElement('div');
             balloon.className = 'hanging-balloon';
             balloon.style.left = Math.random() * 100 + 'vw';
@@ -383,14 +383,14 @@ Happy birthday Boss! May this be the start of the best chapters of your life.
     function startCelebration() {
         document.getElementById('lightsOnBtn').style.display = 'none';
         
-        // Create and animate emojis
+        // Create & animate emojis
         const emojis = ['🎁', '🎈', '🎉', '🎊'];
-        for (let i = 0; i < 30; i++) { // Increased number of emojis
+        for (let i = 0; i < 30; i++) { // emoji number
             let emoji = document.createElement('div');
             emoji.className = 'emoji-animation';
             emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
             emoji.style.left = Math.random() * 100 + 'vw';
-            emoji.style.fontSize = '6rem'; // Increased size of emojis
+            emoji.style.fontSize = '6rem'; // emoji size
             document.body.appendChild(emoji);
             
             setTimeout(() => {
@@ -400,7 +400,7 @@ Happy birthday Boss! May this be the start of the best chapters of your life.
         }
 
         // Create and animate confetti
-        for (let i = 0; i < 150; i++) { // Increased number of confetti pieces
+        for (let i = 0; i < 150; i++) { // confetti number
             let confetti = document.createElement('div');
             confetti.className = 'confetti-piece';
             confetti.style.left = Math.random() * 100 + 'vw';
@@ -424,7 +424,7 @@ Happy birthday Boss! May this be the start of the best chapters of your life.
 
     updateCounter();
 
-    for (let i = 0; i < 300; i++) { // Increased number of stars
+    for (let i = 0; i < 300; i++) { // number of stars
         let star = document.createElement('div');
         star.className = 'star';
         star.style.left = Math.random() * 100 + 'vw';
