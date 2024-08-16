@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Kitty!</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            position: relative;
+            background: radial-gradient(circle, darkslateblue, blue, darkblue, black);
+            color: white;
+            text-align: center;
+            transition: background 1s;
+        }
+        .dark-mode { background: black; }
+        .container {
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.5s ease, opacity 0.5s ease;
+            position: relative;
+            z-index: 10;
+        }
+        h1 {
+            color: #ff4b6a;
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+        }
+        #counter {
+            font-size: 2.5rem;
+            color: #3498db;
+            margin-bottom: 1rem;
+        }
+        .button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            margin: 0 5px;
+        }
+        .button:hover {
+            background-color: #2980b9;
+            transform: scale(1.05);
+        }
+        .earth-text {
+            color: black;
+        }
+        #birthdayNote, #birthdayPoem {
+            display: none;
+            font-size: 1.5rem;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 1rem;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        #birthdayNote.show, #birthdayPoem.show {
+            display: block;
+            opacity: 1;
+            transform: scale(1);
+        }
+        .fade-out { opacity: 0; transform: scale(0.9); }
+        .fade-in { opacity: 1; transform: scale(1); }
+        #cake {
+            font-size: 5rem;
+            margin-top: 1rem;
+            animation: bounce 1s ease infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .star {
+            width: 2px;
+            height: 2px;
+            background-color: white;
+            position: absolute;
+            border-radius: 50%;
+            animation: twinkle 2s infinite;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        .confetti {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background-color: #f39c12;
+            opacity: 0.7;
+            animation: confetti-fall 5s linear infinite;
+            display: none;
+        }
+        @keyframes confetti-fall {
+            0% { transform: translateY(-100vh) rotate(0deg); }
+            100% { transform: translateY(100vh) rotate(720deg); }
+        }
+        .balloon {
+            position: absolute;
+            width: 80px;
+            height: 90px;
+            background-color: #ff4b6a;
+            border-radius: 50%;
+            animation: float 5s ease-in-out infinite;
+            display: none;
+        }
+        .balloon:before {
+            content: "";
+            position: absolute;
+            width: 12px;
+            height: 30px;
+            background-color: #ff4b6a;
+            bottom: -15px;
+            left: 34px;
+            transform: rotate(45deg);
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-30px); }
+        }
+        .hanging-balloon {
+            position: fixed;
+            width: 80px;
+            height: 90px;
+            border-radius: 50%;
+            animation: hanging-float 3s ease-in-out infinite;
+            top: 0;
+            z-index: 50;
+            display: none;
+        }
+        .hanging-balloon::before {
+            content: "";
+            position: absolute;
+            width: 1px;
+            height: 120px;
+            background-color: rgba(0, 0, 0, 0.3);
+            top: 90px;
+            left: 50%;
+        }
+        @keyframes hanging-float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-25px) rotate(5deg); }
+        }
+        #wordArt {
+            position: fixed;
+            top: -100px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 4rem;
+            font-weight: bold;
+            color: #ff4b6a;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transition: top 1s ease, opacity 1s ease;
+            z-index: 100;
+            white-space: nowrap;
+            display: none;
+        }
+        #wordArt.show { top: 20px; opacity: 1; }
+        #lightsOnBtn {
+            background-color: #ff4b6a;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        #lightsOnBtn:hover {
+            background-color: #e84393;
+            transform: translate(-50%, -50%) scale(1.05);
+        }
+        .emoji-animation {
+            position: fixed;
+            font-size: 5rem;
+            bottom: -50px;
+            opacity: 0;
+            transition: bottom 1.5s ease-out, opacity 1.5s ease-out;
+        }
+        .confetti-piece {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background-color: #f39c12;
+            opacity: 0;
+            top: -20px;
+            left: 0;
+            animation: confetti-fall 3s linear forwards;
+        }
+    </style>
+</head>
+<body class="dark-mode">
+    <button id="lightsOnBtn" onclick="startCelebration()">Lights On</button>
+    <div id="wordArt">Happy Birthday!</div>
+    <div class="container" id="mainContainer" style="display: none;">
+        <div id="mainPage">
+            <h1>Happy Birthday Kitty!</h1>
+            <p class="earth-text">You've been on Earth for:</p>
+            <div id="counter" aria-live="polite"></div>
+            <button class="button" onclick="celebrate()">Celebrate!</button>
+        </div>
+        <div id="birthdayNote">
+            <h2>Dear Kitty,</h2>
+            <p>
+            Happy birthday to the friend who quickly became such an irreplaceable part of my life. It's incredible how, in such a short time, you've become such an important part of my world. There's this indescribable connection between us that feels like we've known each other for years. One day I didn’t know you existed, the next you're my favorite human. Explain that magic. We speedran this friendship like pros, and I’m still trying to figure out how this happened bro. From our shared laughter to the quiet moments of understanding, every second spent with you is a treasure. Thank you for being the amazing person you are, for the endless laughs, and for the support that means the world to me.<br><br>
+
+I want to see you win, get everything that you deserve. I want to see you on top, living your best life. I might act dumb sometimes, I might seem stupid, but I’m smart enough to at least know that you’re special. I won’t be able to fix all your problems, but you’ll never have to face them alone. I may not have all the answers or solutions, but I do have all the time in the world for you. I’m really happy to have you as my friend. It doesn’t matter how many times we fight, I will always be there for you. You are so valuable and worth so much, don’t believe anyone who tells you otherwise. You are amazing, never forget that.
+Thank you for being such an incredible friend, for all the amazing memories, and for the countless adventures that lie ahead. I hope this year brings you all the happiness and success you deserve. Your presence makes every moment brighter and more meaningful. I admire your strength, your kindness, and the way you face challenges. You inspire me to be a better person, and I am so grateful to have you in my life. <br><br>
+
+As you celebrate your birthday today, I want to remind you that you are never alone. Whatever life throws your way, I’ll be right here, cheering you on and standing by your side. I look forward to all the fun times ahead and to creating more unforgettable memories together. Here’s to another year of making wonderful memories, of growing closer, and of celebrating the beautiful bond we share.
+You deserve all the love and joy in the world. Your energy is contagious, and you have this incredible ability to turn even the most ordinary moments into something special. Every time we talk or play, I feel like I'm a part of a story that will stay with me forever.
+I know life can be tough, and there will be days when things don’t go as planned. But I want you to remember that I’ll always be there to lift you up, to make you laugh when you want to cry, and to remind you of how amazing you are. You have so much potential, so many dreams yet to be realized, and I can’t wait to see where life takes you.<br><br>
+No matter what the future holds, I want you to know that our friendship means the world to me. You’ve become like family, and I can’t imagine my life without you in it. So here’s to more rank push sessions, more late-night talks, more random adventures, and more moments that make us look at each other and say, ‘How did we get here?’
+Thank you for being you, for never pretending to be anyone else, and for accepting me just as I am. You are one of a kind, and I’m so lucky to have you by my side. Let’s make this year even better than the last, filled with love, laughter, and everything your heart desires.<br><br>
+
+Happy birthday Boss! May this be the start of the best chapters of your life.
+            </p>
+            <p>Wishing you all the best </p>
+            <p></p>
+            <div id="cake">🎂</div>
+            <button class="button" onclick="goBack()">Go Back</button>
+            <button class="button" onclick="showPoem()">Next</button>
+        </div>
+        <div id="birthdayPoem">
+            <h2>A Birthday Poem for You</h2>
+            <p>
+                As you mark the passage of another year,<br>
+		Know that you are loved, appreciated and treasured<br>
+		I wish your kindness return to you tenfold<br>
+		And may your dreams find wings to soar.<br><br>
+                
+                On your birthday, I pause to say, <br>
+		How much your friendship means to me, <br>
+		You listen, you care, you're always there<br>
+		Supporting all my hopes and dreams.<br><br>
+
+		For all the days we've shared,<br>
+		for all the tomorrows we will,<br>
+		Your presence is a quiet celebration,<br>
+		a reminder that in this vast world,<br>
+		there is a soul who sees me,<br>
+		who believes in me,<br>
+		who stands by me when shadows fall.<br><br>
+
+                Every memory we’ve made, every story we’ve shared,<br>
+                Has woven a bond beyond compare.<br>
+                You are the sister I chose, the friend I adore,<br>
+                A blessing in my life, forevermore.<br>
+                On this day, I wish you joy and peace,<br>
+                May your happiness never cease.<br><br>
+
+		In this world of maybes and what-ifs,<br>
+		I'm grateful for a friend like you,<br>
+		You stand beside me, no matter what<br>
+		A friend in the truest form,<br>
+		Your support is a gift I cherish deeply,<br>
+		Shaping my world in ways words can't even express.<br><br>
+
+		So here's to you on your special day<br>
+		May it be filled with joy and laughter<br>
+                May this year bring you new adventures,<br>
+                Moments of wonder and dreams coming true,<br><br>
+
+		Happy birthday to the truest friend<br>
+		the purest soul,<br>
+		the kindest heart I’ve ever known<br>
+		my rock, my confident, my friend<br>
+		May your day be as bright<br>
+		as wonderful, as cherished<br>
+		as you have always been to me....<br><br>
+
+<br><br>
+ </p>
+            <button class="button" onclick="goBack()">Go Back</button>
+        </div>
+    </div>
+<script>
+    const mainPage = document.getElementById('mainPage');
+    const birthdayNote = document.getElementById('birthdayNote');
+    const birthdayPoem = document.getElementById('birthdayPoem');
+    const wordArt = document.getElementById('wordArt');
+    const mainContainer = document.getElementById('mainContainer');
+
+    function calculateDays() {
+        const birthDate = new Date('2007-08-17'); // Replace with actual birth date
+        const currentDate = new Date();
+        const timeDifference = currentDate - birthDate;
+        return Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+    }
+
+    function updateCounter() {
+        const counter = document.getElementById('counter');
+        counter.textContent = `${calculateDays()} days`;
+    }
+
+    function celebrate() {
+        mainPage.classList.add('fade-out');
+        setTimeout(() => {
+            mainPage.style.display = 'none';
+            birthdayNote.classList.add('show');
+            createConfetti();
+            createBalloons();
+            wordArt.classList.add('show');
+        }, 500);
+    }
+
+    function goBack() {
+        birthdayNote.classList.remove('show');
+        birthdayPoem.classList.remove('show');
+        mainPage.style.display = 'block';
+        mainPage.classList.remove('fade-out');
+        clearCelebration();
+    }
+
+    function showPoem() {
+        birthdayNote.classList.remove('show');
+        birthdayPoem.classList.add('show');
+    }
+
+    function createConfetti() {
+        for (let i = 0; i < 200; i++) { // Increased number of confetti pieces
+            let confetti = document.createElement('div');
+            confetti.className = 'confetti';
+            confetti.style.left = Math.random() * 100 + 'vw';
+            confetti.style.animationDuration = Math.random() * 3 + 2 + 's';
+            confetti.style.backgroundColor = getRandomColor();
+            confetti.style.display = 'block';
+            document.body.appendChild(confetti);
+        }
+    }
+
+    function createBalloons() {
+        for (let i = 0; i < 20; i++) { // Increased number of balloons
+            let balloon = document.createElement('div');
+            balloon.className = 'hanging-balloon';
+            balloon.style.left = Math.random() * 100 + 'vw';
+            balloon.style.backgroundColor = getRandomColor();
+            balloon.style.display = 'block';
+            document.body.appendChild(balloon);
+        }
+    }
+
+    function getRandomColor() {
+        const colors = ['#ff4b6a', '#3498db', '#f39c12', '#2ecc71', '#9b59b6'];
+        return colors[Math.floor(Math.random() * colors.length)];
+    }
+
+    function clearCelebration() {
+        const confettiElements = document.querySelectorAll('.confetti');
+        confettiElements.forEach(el => el.remove());
+        const balloonElements = document.querySelectorAll('.hanging-balloon');
+        balloonElements.forEach(el => el.remove());
+        wordArt.classList.remove('show');
+    }
+
+    function startCelebration() {
+        document.getElementById('lightsOnBtn').style.display = 'none';
+        
+        // Create and animate emojis
+        const emojis = ['🎁', '🎈', '🎉', '🎊'];
+        for (let i = 0; i < 30; i++) { // Increased number of emojis
+            let emoji = document.createElement('div');
+            emoji.className = 'emoji-animation';
+            emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+            emoji.style.left = Math.random() * 100 + 'vw';
+            emoji.style.fontSize = '6rem'; // Increased size of emojis
+            document.body.appendChild(emoji);
+            
+            setTimeout(() => {
+                emoji.style.bottom = Math.random() * 50 + 50 + 'vh';
+                emoji.style.opacity = 1;
+            }, 100 * i);
+        }
+
+        // Create and animate confetti
+        for (let i = 0; i < 150; i++) { // Increased number of confetti pieces
+            let confetti = document.createElement('div');
+            confetti.className = 'confetti-piece';
+            confetti.style.left = Math.random() * 100 + 'vw';
+            confetti.style.backgroundColor = getRandomColor();
+            confetti.style.animationDelay = Math.random() * 2 + 's';
+            document.body.appendChild(confetti);
+        }
+
+        // Turn on lights and show main content after animation
+        setTimeout(() => {
+            turnOnLights();
+        }, 3000);
+    }
+
+    function turnOnLights() {
+        document.body.classList.remove('dark-mode');
+        mainContainer.style.display = 'block';
+        document.querySelectorAll('.confetti').forEach(el => el.style.display = 'block');
+        document.querySelectorAll('.hanging-balloon').forEach(el => el.style.display = 'block');
+    }
+
+    updateCounter();
+
+    for (let i = 0; i < 300; i++) { // Increased number of stars
+        let star = document.createElement('div');
+        star.className = 'star';
+        star.style.left = Math.random() * 100 + 'vw';
+        star.style.top = Math.random() * 100 + 'vh';
+        star.style.animationDuration = Math.random() * 2 + 1 + 's';
+        document.body.appendChild(star);
+    }
+</script>
+</body>
+</html>
